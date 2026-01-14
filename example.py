@@ -1,7 +1,10 @@
 from transformers import AutoTokenizer
 from src import LLM, SamplingParams
+import sys
 
 def main():
+    # 打开文件，将标准输出重定向到文件
+    sys.stdout = open("/home/hbwen/prj/vllm-learn/my-vllm/txt1.txt", "w", encoding="utf-8")
     model_path = "/home/hbwen/prj/vllm-learn/my-vllm/huggingface/Qwen3-0.6B"
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast = True)
     llm = LLM(model_path)
