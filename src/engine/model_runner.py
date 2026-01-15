@@ -4,8 +4,9 @@ from src.engine.sequence import Sequence
 from src.layers.sampler import Sampler
 from src.utils.context import set_context, reset_context, get_context
 from src.utils.loader import load_model
-from src.model.qwen3 import Qwen3ForCausalLM
 from src.config import Config
+from src.model.model import get_model_class
+
 
 class ModelRunner:
     def __init__(self, config: Config) -> None:
@@ -15,7 +16,8 @@ class ModelRunner:
         torch.torch.set_default_device("cuda")
         torch.cuda.set_device(config.cuda_id)
         self.sampler = Sampler()
-        self.model = Qwen3ForCausalLM(config.hf_config)
+        model_class = get_model_class(config.model_name)
+        self.model = model_class(config.hf_config)
         load_model(self.model, config.model_path)
         self.warmup()
         self.allocate_kv_cache_block()
@@ -145,6 +147,7 @@ class ModelRunner:
             position：一维
             return：[batch_size, hidden_size]
         """
+        context = get_context()
         return self.model.compute_logits(self.model(input_ids, positions))
     
     def run(self, seqs: list[Sequence], is_prefill: bool) -> list[int]:

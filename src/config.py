@@ -12,7 +12,8 @@ class Config:
     hf_config: AutoConfig | None = None
     kvcache_block_size: int = 256  # 必须是 256 的倍数，因为 flash-attn 的 block kvcache 是这样规定的
     num_kvcache_blocks: int = -1  # 先 warmup，再根据 warmup 结果来确定
-    cuda_id: int = 4  # 运行在哪个 GPU 设备上
+    cuda_id: int = 3  # 运行在哪个 GPU 设备上
+    model_name: str = "Qwen3-0.6B-OPT"
 
     def __post_init__(self):
         assert self.kvcache_block_size % 256 == 0
