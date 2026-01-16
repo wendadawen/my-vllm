@@ -41,7 +41,3 @@ void silu_and_mul_bf16(torch::Tensor& output, torch::Tensor& x, torch::Tensor& y
         reinterpret_cast<bfloat16*>(y.data_ptr()), N
     );
 }
-
-PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-    m.def("silu_and_mul_bf16", &silu_and_mul_bf16, "silu_and_mul_bf16");
-}
