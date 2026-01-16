@@ -1,11 +1,13 @@
 from transformers import AutoTokenizer
 from src import LLM, SamplingParams
 import sys
+import os
 
 def main():
     # 打开文件，将标准输出重定向到文件
-    # sys.stdout = open("/home/hbwen/prj/vllm-learn/my-vllm/txt1.txt", "w", encoding="utf-8")
-    model_path = "/home/hbwen/prj/vllm-learn/my-vllm/huggingface/Qwen3-0.6B"
+    DIRPATH = os.path.dirname(os.path.abspath(__file__))
+    sys.stdout = open(os.path.join(DIRPATH, "output.txt"), "w", encoding="utf-8")
+    model_path = os.path.join(DIRPATH, "huggingface/Qwen3-0.6B")
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast = True)
     llm = LLM(model_path)
     sampling_params = SamplingParams()
