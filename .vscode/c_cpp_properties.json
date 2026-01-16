@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/hbwen/data/app/miniconda3/envs/nano-vllm/lib/python3.12/site-packages/torch/include",
+                "/home/hbwen/data/app/miniconda3/envs/nano-vllm/lib/python3.12/site-packages/torch/include/torch/csrc/api/include/",
+                "/home/hbwen/data/app/miniconda3/envs/nano-vllm/include/python3.12"
+
+            ],
+            "defines": [],
+            "compilerPath": "/usr/local/cuda-12.4/bin/nvcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64"
+        }
+    ],
+    "version": 4
+}

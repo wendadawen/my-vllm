@@ -1,11 +1,12 @@
 import torch
 from torch import nn
-import torch.nn.functional as F
+from src.layers.cuda import cuda_ext_lib
 
 class SiLUAndMul(nn.Module):
     def __init__(self):
         super().__init__()
 
-    @torch.compile
     def forward(self, x0: torch.Tensor, x1: torch.Tensor) -> torch.Tensor:
-        return F.silu(x0) * x1
+        output = torch.empty(x0.shape, dtype=x0.dtype, device=x0.device)
+        cuda_ext_lib.silu_and_mul_bf16(output, x0, x1)
+        return output
