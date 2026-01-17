@@ -9,6 +9,7 @@ void rotary_embedding_inplace_bf16(
     torch::Tensor& query, torch::Tensor& key, 
     torch::Tensor& sin_cos_cache
 );
+void linear_bf16(torch::Tensor& A, torch::Tensor& B, torch::Tensor& C);
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("silu_and_mul_bf16", &silu_and_mul_bf16, "silu_and_mul_bf16");
@@ -16,4 +17,5 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("rmsnorm_fused_add_inplace_bf16", &rmsnorm_fused_add_inplace_bf16, "rmsnorm_fused_add_inplace_bf16");
     m.def("embedding_bf16", &embedding_bf16, "embedding_bf16");
     m.def("rotary_embedding_inplace_bf16", &rotary_embedding_inplace_bf16, "rotary_embedding_inplace_bf16");
+    m.def("linear_bf16", &linear_bf16, "linear_bf16");
 }
