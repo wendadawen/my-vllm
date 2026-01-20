@@ -17,8 +17,7 @@ class Scheduler:
         self.waiting: deque[Sequence] = deque()  # prefill or 换出
         self.running: deque[Sequence] = deque()  # decode
 
-    def add_request(self, prompt: str, sampling_params: SamplingParams) -> None:
-        token_ids = self.tokenizer.encode(prompt)
+    def add_request(self, token_ids: list[int], sampling_params: SamplingParams) -> None:
         assert len(token_ids) < self.max_model_len
         seq = Sequence(token_ids, sampling_params)
         self.waiting.append(seq)

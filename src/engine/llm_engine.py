@@ -35,18 +35,38 @@ class LLMEngine:
 
     def generate(
         self, 
-        prompts: list[str], 
-        sampling_params: SamplingParams
+        prompts: list[list[int] | str], 
+        sampling_params: SamplingParams | list[SamplingParams]
     ) -> list[dict]:
         """
         - 将 prompts 的每条 prompt 形成调度器的调度的单位 request
         - 直到所有 requests 都被执行完毕
             - 调用 step 执行 request
         - 将结果按 seq_id 排序整理输出
+        
+        Args:
+            prompts: 可以是 token id 列表的列表，或字符串列表（会自动转换为 token ids）
+            sampling_params: 可以是单个 SamplingParams 或 SamplingParams 列表（每个请求一个）
         """
-        outputs = {}
+        # 处理 prompts：如果是字符串，转换为 token ids
+        prompt_token_ids = []
         for prompt in prompts:
-            self.scheduler.add_request(prompt, sampling_params)
+            if isinstance(prompt, str):
+                prompt_token_ids.append(self.tokenizer.encode(prompt))
+            else:
+                prompt_token_ids.append(prompt)
+        
+        # 处理 sampling_params：如果是单个，转换为列表
+        if isinstance(sampling_params, SamplingParams):
+            sampling_params_list = [sampling_params] * len(prompt_token_ids)
+        else:
+            sampling_params_list = sampling_params
+            assert len(sampling_params_list) == len(prompt_token_ids), \
+                f"sampling_params 列表长度 ({len(sampling_params_list)}) 必须与 prompts 长度 ({len(prompt_token_ids)}) 相同"
+        
+        outputs = {}
+        for token_ids, sp in zip(prompt_token_ids, sampling_params_list):
+            self.scheduler.add_request(token_ids, sp)
         while not self.scheduler.is_finished():
             output = self.step()
             for seq_id, token_ids in output:
