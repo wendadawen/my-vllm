@@ -29,7 +29,7 @@ __global__ void silu_and_mul_bf16_kernel(bfloat16* output, bfloat16* x, bfloat16
 
 #define BF168(x) (reinterpret_cast<float4*>(&(x))[0])
 
-__global__ void silu_and_mul_bf16x4_kernel(
+__global__ void silu_and_mul_bf16x8_kernel(
     bfloat16* output, 
     bfloat16* x, 
     bfloat16* y, 
@@ -71,7 +71,7 @@ void silu_and_mul_bf16(torch::Tensor& output, torch::Tensor& x, torch::Tensor& y
     int64_t N = x.numel();
     dim3 block(256);
     dim3 grid((N + 2047) / 2048);
-    silu_and_mul_bf16x4_kernel<<<grid, block>>>(
+    silu_and_mul_bf16x8_kernel<<<grid, block>>>(
         reinterpret_cast<bfloat16*>(output.data_ptr()), 
         reinterpret_cast<bfloat16*>(x.data_ptr()), 
         reinterpret_cast<bfloat16*>(y.data_ptr()), N
